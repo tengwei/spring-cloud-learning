@@ -1,0 +1,4 @@
+rootProject.name = 'spring-cloud-learning'
+include 'service-registry'
+include 'config-service'
+
