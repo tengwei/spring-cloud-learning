@@ -1,0 +1,16 @@
+server:
+  port: 8800
+
+eureka:
+  server:
+    wait-time-in-ms-when-sync-empty: 0
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+  instance:
+    prefer-ip-address: true
+
+management:
+  security:
+    enabled: false
+  context-path: /management

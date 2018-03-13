@@ -1,0 +1,18 @@
+server:
+  port: 8810
+
+spring:
+  profiles: dev,staging,testing
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/tengwei/spring-boot-learning.git
+#          username:
+#          password:
+          search-paths: '{profile}'
+
+management:
+  security:
+    enabled: false
+  context-path: /management
