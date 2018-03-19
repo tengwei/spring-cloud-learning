@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    url: jdbc:mysql://127.0.0.1/szjys_dev?useSSL=false&useUnicode=yes&characterEncoding=UTF-8
+    username: root
+    password: root
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:8800/eureka
+content: docker
+
+#security:
+#  oauth2:
+#    client:
+#      access-token-uri: http://127.0.0.1:9001/uaa/oauth/token
+#    resource:
+#      user-info-uri: http://127.0.0.1:9001/uaa/userinfo
+#      token-info-uri: http://127.0.0.1:9001/uaa/oauth/check_token
+
