@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: provider2-service
+spring:
+  cloud:
+    config:
+      uri: http://localhost:8810/
