@@ -5,10 +5,14 @@ eureka:
   server:
     wait-time-in-ms-when-sync-empty: 0
   client:
-    register-with-eureka: false
+    register-with-eureka: true
     fetch-registry: false
+    service-url:
+      defaultZone: http://localhost:${server.port}/eureka/
   instance:
     prefer-ip-address: true
+#    lease-expiration-duration-in-seconds: 6 意思是6秒不发送心跳检查，就删除该实例，默认90秒
+#    lease-renewal-interval-in-seconds: 2 心跳检查的时间，默认30秒
 
 management:
   security:

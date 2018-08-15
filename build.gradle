@@ -1,3 +1,5 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
 buildscript {
     repositories {
         maven { url "https://plugins.gradle.org/m2/" }
@@ -15,18 +17,90 @@ subprojects {
     apply plugin: "io.spring.dependency-management"
     apply plugin: "org.springframework.boot"
 
+
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
+
+    processResources {
+        eachFile { details ->
+            if (!details.name.endsWith('.p12')&&!details.name.endsWith('.html')) {
+                details.filter(ReplaceTokens, tokens: ["project.version": project.version])
+                details.filter(ReplaceTokens, tokens: ["project.name": project.name])
+            }
+        }
+    }
+
+    processResources.doLast {
+        copy {
+            from "$buildDir/resources/main"
+            into "$buildDir/idea/main"
+        }
+    }
+
+    compileJava.dependsOn(processResources)
+
+    tasks.withType(JavaCompile) {
+        options.compilerArgs << "-Xlint:none"
+        options.encoding = "UTF-8"
+        options.debug = true // if set false stacktrace will not have line numbers
+        //enable compilation in a separate daemon process
+        options.fork = true
+        //enable incremental compilation
+        options.incremental = true
+        options.warnings = false
+        options.deprecation = false
+        options.verbose = false
+        options.failOnError = true
+    }
+
+    compileJava.doLast {
+        copy {
+            from "$buildDir/classes/java/main"
+            into "$buildDir/idea/main"
+        }
+    }
+
+
 
     repositories {
         mavenLocal()
         mavenCentral()
     }
+    task sourceJar(type: Jar, dependsOn: classes) {
+        classifier 'sources'
+        from sourceSets.main.allSource
+    }
 
+    javadoc {
+        options.encoding = 'UTF-8'
+    }
+
+    tasks.withType(Javadoc) {
+        options.addStringOption('Xdoclint:none', '-quiet')
+    }
+
+    task javadocJar(type: Jar, dependsOn: javadoc) {
+        classifier = 'javadoc'
+        from javadoc.destinationDir
+    }
+
+    task copyJar(type:Copy, dependsOn: bootRepackage){
+        from(jar.archivePath){
+            exclude("*.javadoc.jar","*.sources.jar","*.original")
+        }
+        into(project.projectDir)
+        rename{filename -> project.name+".jar"}
+    }
+
+    clean{
+        delete project.name+".jar"
+    }
     publishing {
         publications {
             mavenJava(MavenPublication) {
                 from components.java
+                artifact sourceJar
+                //artifact javadocJar
             }
         }
 

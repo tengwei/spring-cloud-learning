@@ -1,6 +1,8 @@
+info:
+  version: @project.version@
 spring:
   application:
-    name: provider1-service
+    name: @project.name@
   cloud:
     config:
-      uri: http://localhost:8810/
+      uri: ${CONFIG_SERVER_URI:http://localhost:8810/}

@@ -1,16 +1,33 @@
 server:
   port: 8810
 
+eureka:
+  instance:
+#    lease-renewal-interval-in-seconds: 10
+    prefer-ip-address: true
+#    status-page-url-path: /management/info
+#    health-check-url-path: /management/health
+#    metadata-map:
+#      management.context-path: /management
+  client:
+    registry-fetch-interval-seconds: 5
+    service-url:
+      defaultZone: http://localhost:8800/eureka/
+    register-with-eureka: true
+    fetch-registry: false
+
 spring:
   profiles: dev,staging,testing
   cloud:
     config:
+      label: master
       server:
         git:
-          uri: https://github.com/tengwei/spring-boot-learning.git
+          uri: https://github.com/tengwei/spring-cloud-learning.git
 #          username:
 #          password:
-          search-paths: '{profile}'
+          search-paths: 'config-store/{profile}'
+
 
 management:
   security:
